@@ -16,4 +16,4 @@ FAILED，其中分页问题占 2 个用例）。
 | 4 | 目录分页翻页错位：第一页就把最前面的商品漏掉了 | `pagination.py` `paginate()` | `curl localhost:8080/catalog/1/2`，第一页应返回目录前 2 个商品，实际返回的是后面一批 | `test_pagination.py` |
 | 5 | 热门位配置更新后 `/trending` 一直不刷新：说好的 60s TTL 形同虚设，缓存条目永不过期 | `cache.py` `TTLCache.set()` | 往缓存里放一个短 TTL 的条目，过了 TTL 再 `get` 仍能取到旧值 | `test_cache.py` |
 | 6 | 会员价在 0.5 分的边界上差一分钱：按口径应四舍五入（half-up），实际被直接舍掉 | `pricing.py` `member_price_cents()` | `curl localhost:8080/price/PRODUCT-2/50`，应为 500 分，实际 499 分 | `test_pricing.py` |
-| 7 | 服务内存随流量单调上涨、趋向 OOM（最近一次发版之后开始出现） | `recommendation_server.py` 里"已服务商品 ID 历史"这个结构 | `docker stats` 看容器 RSS 持续爬升；`curl localhost:8080/metrics` 看 `recommendation_seen_ids_total` 只增不减 | `test_recommendation.py::test_memory_is_bounded` |
+| 7 | 服务内存随流量单调上涨、趋向 OOM | `recommendation_server.py` 里"已服务商品 ID 历史"这个结构 | `docker stats` 看容器 RSS 持续爬升；`curl localhost:8080/metrics` 看 `recommendation_seen_ids_total` 只增不减 | `test_recommendation.py::test_memory_is_bounded` |
